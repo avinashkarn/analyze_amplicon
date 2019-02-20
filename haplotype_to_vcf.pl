@@ -79,12 +79,9 @@ if ($opts{"b"})
 }
 
 
-open OUT, ">$familyName.lepmap3.pedigree.txt";
 open OUT2, ">$familyName.vcf";
 open OUT3, ">$familyName.vcf.allelelookup.txt";
-open OUT4, ">$familyName.lepmap2.txt";
-open OUT5, ">$familyName.lepmap2.markers.txt";
-open OUT6, ">$familyName.rqtl.txt";
+
 
 
 	print OUT2 "##fileformat=VCFv4.0\n";
@@ -419,12 +416,11 @@ close OUT5;
 
 sub printhelp
 {
-	print "Usage: analyze_amplicon.pl -s mySampleFile -k myKeyFile\n";
 	print "Options:\n";
 	print "-g: Input genotype file\n";
 	print "-f: mininum allele frequency\n";
 	print "-b: define blank samples index, if there are several separated by comma. First sample index is 1.\n";
-	print "-m: mather parent index, if there are several separated by comma. First sample index is 1.\n";
+	print "-m: maternal parent index, if there are several separated by comma. First sample index is 1.\n";
 	print "-p: paternal parent index, if there are several separated by comma. First sample is 1.\n";
 	print "-n: family name";
 	print "-h: help menu.";

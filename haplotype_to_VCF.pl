@@ -417,7 +417,6 @@ close OUT5;
 
 sub printhelp
 {
-	print "Usage: analyze_amplicon.pl -s mySampleFile -k myKeyFile\n";
 	print "Options:\n";
 	print "-g: Input genotype file\n";
 	print "-f: mininum allele frequency\n";

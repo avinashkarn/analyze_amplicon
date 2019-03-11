@@ -78,7 +78,7 @@ if ($opts{"b"})
 	}
 }
 
-
+open OUT, ">$familyName.lepmap3.pedigree.txt";
 
 open OUT2, ">$familyName.vcf";
 open OUT3, ">$familyName.vcf.allelelookup.txt";

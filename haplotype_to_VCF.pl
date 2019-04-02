@@ -78,8 +78,6 @@ if ($opts{"b"})
 	}
 }
 
-open OUT, ">$familyName.lepmap3.pedigree.txt";
-
 open OUT2, ">$familyName.vcf";
 open OUT3, ">$familyName.vcf.allelelookup.txt";
 
@@ -176,44 +174,6 @@ LOOP3:for (my $i=0; $i<=$#samples; $i++)
 }
 
 
-## first line
-print OUT "Contig\tPos";
-for (my $i=0; $i< $usedSampleCount; $i++) 
-{
-	print OUT "\t".$familyName;
-}
-
-
-#second line
-print OUT "Contig\tPos\t";
-print OUT (join "\t", @usedSamples);
-print OUT "\n";
-
-#third line
-print OUT "Contig\tPos\t";
-print OUT (join "\t", @usedSamplesDad);
-print OUT "\n";
-
-#fourth line
-print OUT "Contig\tPos\t";
-print OUT (join "\t", @usedSamplesMom);
-print OUT "\n";
-
-#fifth line
-print OUT "Contig\tPos\t";
-print OUT (join "\t", @usedSamplesSex);
-print OUT "\n";
-
-
-## six line
-print OUT "Contig\tPos";
-for (my $i=0; $i< $usedSampleCount; $i++) 
-{
-	print OUT "\t0";
-}
-print OUT "\n";
-
-
 
 print OUT2 (join "\t", @usedSamples);
 print OUT2 "\n";
@@ -231,31 +191,31 @@ for (my $i=0; $i< $usedSampleCount; $i++)
 	push @{$rqtl[$i]}, $usedSamples[$i];
 }
 
-my %markernameToContig;
-my %markernameToPos;
+my %markernameToCHR;
+my %markernameToPOS;
 LOOP1:while (<IN>) 
 {
 	s/\s+$//;
 	my @data = split "\t";
 	my $locus = shift @data;
 	my $alleles =shift @data;
-	my ($contig, $pos);
+	my ($CHR, $POS);
 	if ($locus=~/(.+)_(\d+)$/) 
 	{
-		$contig = $1;
-		$pos = $2;
+		$CHR = $1;
+		$POS = $2;
 	}
 	else
 	{
-		print "warning: marker $locus is not in right format! output as contig $locus position 0bp\n";
-		$contig = $locus;
-		$pos = 0;
+		print "warning: marker $locus is not in right format! output as CHR $locus POSition 0bp\n";
+		$CHR = $locus;
+		$POS = 0;
 	}
-	$markernameToContig{$locus} = $contig;
-	$markernameToPos{$locus}= $pos;
-	unless ($pos) 
+	$markernameToCHR{$locus} = $CHR;
+	$markernameToPOS{$locus}= $POS;
+	unless ($POS) 
 	{
-		$pos = "";
+		$POS = "";
 	}
 	$alleles =~s/;\s*$//;
 	my @alleles = split ";", $alleles;
@@ -294,7 +254,7 @@ LOOP1:while (<IN>)
 	}
 	
 	push @lepmap2Markers, $locus;
-	print OUT2 $contig, "\t", $pos, "\t", $locus, "\t", $ref, "\t", $alt, "\t.\tPASS\t.\tGT:AD:DP" ;
+	print OUT2 $CHR, "\t", $POS, "\t", $locus, "\t", $ref, "\t", $alt, "\t.\tPASS\t.\tGT:AD:DP" ;
 
 	my $sampleIndexInLM2 = 0;
 	foreach  my $i (@usedSampleIndex) 
@@ -368,51 +328,10 @@ LOOP1:while (<IN>)
 
 
 }
-close OUT;
+
 close OUT2;
 close OUT3;
 
-
-foreach  ( @lepmap2Markers) 
-{
-	print OUT6 "\t$_";
-}
-print OUT6 "\n";
-
-foreach  ( @lepmap2Markers) 
-{
-	print OUT6 "\t$markernameToContig{$_}";
-}
-print OUT6 "\n";
-
-foreach  ( @lepmap2Markers) 
-{
-	print OUT6 "\t$markernameToPos{$_}";
-}
-print OUT6 "\n";
-
-
-for (my $i=0; $i< $usedSampleCount; $i++) 
-{
-	print OUT4 (join "\t", @{$lepmap2[$i]});
-	print OUT4 "\n";
-
-	print OUT6 (join "\t", @{$rqtl[$i]});
-	print OUT6 "\n";
-}
-
-close OUT4;
-
-
-
-my $i=0;
-foreach  (@lepmap2Markers) 
-{
-	print OUT5  $i, "\t", $_, "\n";
-	$i ++;
-}
-
-close OUT5;
 
 
 sub printhelp
